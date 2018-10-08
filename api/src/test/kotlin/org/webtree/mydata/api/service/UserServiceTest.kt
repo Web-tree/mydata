@@ -1,5 +1,6 @@
 package org.webtree.mydata.api.service
 
+import org.junit.jupiter.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -11,16 +12,18 @@ import org.webtree.mydata.api.domain.User
 import org.webtree.mydata.api.repository.UserRepository
 
 @ExtendWith(MockitoExtension::class)
-internal class UserServiceTest(@Mock(answer = Answers.RETURNS_MOCKS) var userRepository: UserRepository) {
-    private lateinit var userService: UserService
+internal class UserServiceTest {
+    @Mock(answer = Answers.RETURNS_MOCKS)
+    lateinit var userRepository: UserRepository
+    lateinit var userService: UserService
 
     @BeforeEach
-    internal fun setUp() {
+    fun setUp() {
         userService = UserService(userRepository)
     }
 
     @Test
-    internal fun shouldReturnUserFromRepo() {
+    fun shouldReturnUserFromRepo() {
         //given
         val id = "someId"
 
@@ -32,7 +35,7 @@ internal class UserServiceTest(@Mock(answer = Answers.RETURNS_MOCKS) var userRep
     }
 
     @Test
-    internal fun shouldSaveUserInRepo() {
+    fun shouldSaveUserInRepo() {
         //given
         val user = User()
 

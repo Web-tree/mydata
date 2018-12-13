@@ -1,6 +1,5 @@
 package org.webtree.mydata.api.controller
 
-import com.fasterxml.jackson.databind.ObjectMapper
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -8,6 +7,7 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.autoconfigure.web.reactive.WebFluxTest
+import org.springframework.security.test.context.support.WithMockUser
 import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.csrf
 import org.springframework.security.test.web.reactive.server.SecurityMockServerConfigurers.mockUser
 import org.springframework.test.context.ContextConfiguration
@@ -21,6 +21,7 @@ import reactor.core.publisher.toMono
 
 @ExtendWith(SpringExtension::class)
 @WebFluxTest(DataController::class)
+@WithMockUser
 @ContextConfiguration(classes = [ControllerTestConfig::class])
 internal class DataControllerTest {
     @Autowired
@@ -28,6 +29,13 @@ internal class DataControllerTest {
 
     @Autowired
     lateinit var dataService: DataService
+
+    @BeforeEach
+    internal fun setUp() {
+        webTestClient = webTestClient
+                .mutateWith(csrf())
+                .mutateWith(mockUser())
+    }
 
     @Nested
     inner class Text {
@@ -37,9 +45,6 @@ internal class DataControllerTest {
 
         @BeforeEach
         internal fun setUp() {
-            webTestClient = webTestClient
-                    .mutateWith(csrf())
-                    .mutateWith(mockUser())
             data = TextData(dataValue)
         }
 
@@ -53,6 +58,7 @@ internal class DataControllerTest {
                     .expectStatus().isOk
                     .expectBody().jsonPath("id").isNotEmpty
         }
+
         @Test
         internal fun shouldBeAdded() {
             //when

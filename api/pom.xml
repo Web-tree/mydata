@@ -163,9 +163,6 @@
                 <version>${maven-surefire-plugin.version}</version>
                 <configuration>
                     <failIfNoTests>true</failIfNoTests>
-                    <includes>
-                        <include>**/*Test.kt</include>
-                    </includes>
                     <properties>
                         <excludeTags>integration-test</excludeTags>
                     </properties>

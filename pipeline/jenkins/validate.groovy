@@ -1,7 +1,5 @@
 pipeline {
-    agent {
-        label 'slave'
-    }
+    agent any
     stages {
         stage('Checkout') {
             steps {
@@ -14,11 +12,18 @@ pipeline {
         stage('Validate') {
             parallel {
                 stage('Verify api') {
+                    environment {
+                        MAVEN_HOME = '/usr/share/maven'
+                    }
                     agent {
-                        docker {
-                            image 'maven:3.6.0-jdk-11-slim'
-                            args '-v jenkins_m2:/root/.m2'
-                            reuseNode true
+                        kubernetes {
+                            label 'mystuff-validate-maven'
+                            containerTemplate {
+                                name 'maven-validate'
+                                image 'maven:3.6.0-jdk-11-slim'
+                                ttyEnabled true
+                                command 'cat'
+                            }
                         }
                     }
                     stages {
@@ -34,9 +39,14 @@ pipeline {
                 }
                 stage('Verify web') {
                     agent {
-                        docker {
-                            image 'webtree/node-with-chrome'
-                            reuseNode true
+                        kubernetes {
+                            label 'mydata-validate-node'
+                            containerTemplate {
+                                name 'node-validate'
+                                image 'webtree/node-with-chrome'
+                                ttyEnabled true
+                                command 'cat'
+                            }
                         }
                     }
                     stages {

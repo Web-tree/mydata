@@ -1,0 +1,119 @@
+service: mydata
+
+plugins:
+  - serverless-dynamodb-local
+  - serverless-offline
+
+custom:
+  dynamodb:
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+    migration:
+      dir: offline/migrations
+    stages:
+      - dev
+
+  authorizer:
+    arn: arn:aws:lambda:eu-central-1:830971531223:function:authorizer-dev-authorize
+    cache:
+      ttl: 0
+
+provider:
+  name: aws
+  stage: dev
+  runtime: nodejs10.x
+  region: eu-central-1
+  timeout: 5
+  environment:
+    DYNAMODB_TABLE: ${self:service}-${opt:stage, self:provider.stage}
+  iamRoleStatements:
+    - Effect: Allow
+      Action:
+        - dynamodb:Query
+        - dynamodb:Scan
+        - dynamodb:GetItem
+        - dynamodb:PutItem
+        - dynamodb:UpdateItem
+        - dynamodb:DeleteItem
+      Resource: "arn:aws:dynamodb:${opt:region, self:provider.region}:*:table/${self:provider.environment.DYNAMODB_TABLE}"
+  exclude:
+    - .dynamodb/**
+    - .requestsExamples/**
+
+functions:
+  create:
+    handler: src/data/create.handler
+    events:
+      - http:
+          path: data
+          method: post
+          authorizer:
+            arn: ${self:custom.authorizer.arn}
+            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+  list:
+    handler: src/data/list.handler
+    events:
+      - http:
+          path: data
+          method: get
+          authorizer:
+            arn: ${self:custom.authorizer.arn}
+            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+
+  get:
+    handler: src/data/get.handler
+    events:
+      - http:
+          path: data/{name}
+          method: get
+          authorizer:
+            arn: ${self:custom.authorizer.arn}
+            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+
+  update:
+    handler: src/data/update.handler
+    events:
+      - http:
+          path: data/{name}
+          method: put
+          authorizer:
+            arn: ${self:custom.authorizer.arn}
+            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+
+  delete:
+    handler: src/data/delete.handler
+    events:
+      - http:
+          path: data/{name}
+          method: delete
+          authorizer:
+            arn: ${self:custom.authorizer.arn}
+            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+
+resources:
+  Resources:
+    MydataTable:
+      Type: 'AWS::DynamoDB::Table'
+      DeletionPolicy: Retain
+      Properties:
+        AttributeDefinitions:
+          -
+            AttributeName: userId
+            AttributeType: S
+          -
+            AttributeName: name
+            AttributeType: S
+        KeySchema:
+          -
+            AttributeName: userId
+            KeyType: HASH
+          -
+            AttributeName: name
+            KeyType: RANGE
+
+        ProvisionedThroughput:
+          ReadCapacityUnits: 1
+          WriteCapacityUnits: 1
+        TableName: ${self:provider.environment.DYNAMODB_TABLE}

@@ -1,0 +1,41 @@
+# For a quick start check out our HTTP Requests collection (Tools|HTTP Client|Open HTTP Requests Collection).
+#
+# Following HTTP Request Live Templates are available:
+# * 'gtrp' and 'gtr' create a GET request with or without query parameters;
+# * 'ptr' and 'ptrp' create a POST request with a simple or parameter-like body;
+# * 'mptr' and 'fptr' create a POST request to submit a form with a text or file field (multipart/form-data);
+
+POST https://7prmgags2f.execute-api.eu-central-1.amazonaws.com/dev/data
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNTYxNjE1NTgyLCJpYXQiOjE1NjEwMTA3ODIsImp0aSI6IjNkYWM1NjAwLTBiNmUtNDY2MS04OTE4LTg4ZGJmNzllMTk3ZiJ9.ALaao24uDzRq0NwqcC9cJXczABk8ra6GQWgtLNi2Fj7V-L7f1mGvkAlntlDnw5rnHRuuyxBnFZlUkW2J7OJgzw
+
+{
+  "name": "testName2",
+  "value": "testValue"
+}
+
+###
+GET https://7prmgags2f.execute-api.eu-central-1.amazonaws.com/dev/data/testName
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNTYxNjE1NTgyLCJpYXQiOjE1NjEwMTA3ODIsImp0aSI6IjNkYWM1NjAwLTBiNmUtNDY2MS04OTE4LTg4ZGJmNzllMTk3ZiJ9.ALaao24uDzRq0NwqcC9cJXczABk8ra6GQWgtLNi2Fj7V-L7f1mGvkAlntlDnw5rnHRuuyxBnFZlUkW2J7OJgzw
+
+###
+GET https://7prmgags2f.execute-api.eu-central-1.amazonaws.com/dev/data
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNTYxNjE1NTgyLCJpYXQiOjE1NjEwMTA3ODIsImp0aSI6IjNkYWM1NjAwLTBiNmUtNDY2MS04OTE4LTg4ZGJmNzllMTk3ZiJ9.ALaao24uDzRq0NwqcC9cJXczABk8ra6GQWgtLNi2Fj7V-L7f1mGvkAlntlDnw5rnHRuuyxBnFZlUkW2J7OJgzw
+
+###
+PUT https://7prmgags2f.execute-api.eu-central-1.amazonaws.com/dev/data/testName
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNTYxNjE1NTgyLCJpYXQiOjE1NjEwMTA3ODIsImp0aSI6IjNkYWM1NjAwLTBiNmUtNDY2MS04OTE4LTg4ZGJmNzllMTk3ZiJ9.ALaao24uDzRq0NwqcC9cJXczABk8ra6GQWgtLNi2Fj7V-L7f1mGvkAlntlDnw5rnHRuuyxBnFZlUkW2J7OJgzw
+
+{
+  "value": "testValue2"
+}
+
+###
+DELETE https://7prmgags2f.execute-api.eu-central-1.amazonaws.com/dev/data/testName
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ0ZXN0IiwiZXhwIjoxNTYxNjE1NTgyLCJpYXQiOjE1NjEwMTA3ODIsImp0aSI6IjNkYWM1NjAwLTBiNmUtNDY2MS04OTE4LTg4ZGJmNzllMTk3ZiJ9.ALaao24uDzRq0NwqcC9cJXczABk8ra6GQWgtLNi2Fj7V-L7f1mGvkAlntlDnw5rnHRuuyxBnFZlUkW2J7OJgzw
+
+###

@@ -1,0 +1,20 @@
+{
+  "name": "mydata",
+  "version": "1.0.0",
+  "description": "",
+  "main": "handler.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "uuid": "^3.3.2"
+  },
+  "devDependencies": {
+    "aws-sdk": "^2.480.0",
+    "serverless-dynamodb-local": "^1.0.2",
+    "serverless-offline": "^5.4.4"
+  }
+}

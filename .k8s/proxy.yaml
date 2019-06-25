@@ -1,0 +1,30 @@
+kind: Service
+apiVersion: v1
+metadata:
+  name: mydata-proxy
+spec:
+  ports:
+    - protocol: TCP
+      name: https
+      port: 443
+      targetPort: 443
+  type: ExternalName
+  externalName: kxy6rgopec.execute-api.eu-central-1.amazonaws.com
+
+---
+apiVersion: extensions/v1beta1
+kind: Ingress
+metadata:
+  name: proxy-to-google
+  annotations:
+    traefik.ingress.kubernetes.io/request-modifier: "AddPrefix: /test"
+    traefik.ingress.kubernetes.io/preserve-host: "false"
+spec:
+  rules:
+    - host: mydatatest.webtree.org
+      http:
+        paths:
+          - path: /
+            backend:
+              serviceName: mydata-proxy
+              servicePort: https

@@ -2,6 +2,7 @@
 
 const dynamodb = require('../dynamodb');
 const getUserId = require('./user/getUserId');
+const response = require('../response');
 
 module.exports.handler = (event, context, callback) => {
     const params = {
@@ -23,11 +24,6 @@ module.exports.handler = (event, context, callback) => {
             return;
         }
 
-        // create a response
-        const response = {
-            statusCode: 200,
-            body: JSON.stringify(result.Items),
-        };
-        callback(null, response);
+        callback(null, response(200, result.Items));
     });
 };

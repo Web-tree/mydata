@@ -2,6 +2,7 @@
 
 const dynamodb = require('../dynamodb');
 const getUserId = require('./user/getUserId');
+const response = require('../response');
 
 module.exports.handler = (event, context, callback) => {
     const params = {
@@ -16,19 +17,10 @@ module.exports.handler = (event, context, callback) => {
         // handle potential errors
         if (error) {
             console.error(error);
-            callback(null, {
-                statusCode: error.statusCode || 501,
-                headers: { 'Content-Type': 'text/plain' },
-                body: 'Couldn\'t fetch data.',
-            });
+            callback(null, response(error.statusCode || 501, 'Couldn\'t fetch data.'));
             return;
         }
 
-        // create a response
-        const response = {
-            statusCode: 200,
-            body: JSON.stringify(result.Item),
-        };
-        callback(null, response);
+        callback(null, response(200, result.Item));
     });
 };

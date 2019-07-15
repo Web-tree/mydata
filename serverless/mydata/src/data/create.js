@@ -2,17 +2,14 @@
 
 const dynamodb = require('../dynamodb');
 const getUserId = require('./user/getUserId');
+const response = require('../response');
 
 module.exports.handler = (event, context, callback) => {
     const timestamp = new Date().getTime();
     const data = JSON.parse(event.body);
     if (typeof data.name !== 'string') {
         console.error('Validation Failed');
-        callback(null, {
-            statusCode: 400,
-            headers: {'Content-Type': 'text/plain'},
-            body: 'Couldn\'t create data.',
-        });
+        callback(null, response(400, 'Couldn\'t create data.'));
         return;
     }
 
@@ -30,18 +27,10 @@ module.exports.handler = (event, context, callback) => {
     dynamodb.put(params, (error) => {
         if (error) {
             console.error(error);
-            callback(null, {
-                statusCode: error.statusCode || 501,
-                headers: {'Content-Type': 'text/plain'},
-                body: 'Couldn\'t create data.',
-            });
+            callback(null, response(error.statusCode || 501, 'Couldn\'t create data.'));
             return;
         }
 
-        const response = {
-            statusCode: 200,
-            body: JSON.stringify(params.Item),
-        };
-        callback(null, response);
+        callback(null, response(200, params.Item));
     });
 };

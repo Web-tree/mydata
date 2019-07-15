@@ -49,6 +49,7 @@ functions:
       - http:
           path: data
           method: post
+          cors: true
           authorizer:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
@@ -58,6 +59,7 @@ functions:
       - http:
           path: data
           method: get
+          cors: true
           authorizer:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
@@ -68,6 +70,7 @@ functions:
       - http:
           path: data/{name}
           method: get
+          cors: true
           authorizer:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
@@ -78,6 +81,7 @@ functions:
       - http:
           path: data/{name}
           method: put
+          cors: true
           authorizer:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
@@ -88,6 +92,7 @@ functions:
       - http:
           path: data/{name}
           method: delete
+          cors: true
           authorizer:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}

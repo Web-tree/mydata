@@ -7,12 +7,16 @@ const response = require('../response');
 module.exports.handler = (event, context, callback) => {
     const params = {
         TableName: process.env.DYNAMODB_TABLE,
-        Key: {
-            userId: getUserId(event)
+        KeyConditionExpression: '#userId = :userId',
+        ExpressionAttributeNames: {
+            "#userId": "userId"
         },
+        ExpressionAttributeValues: {
+            ":userId": getUserId(event)
+        }
     };
 
-    dynamodb.scan(params, (error, result) => {
+    dynamodb.query(params, (error, result) => {
         // handle potential errors
         if (error) {
             console.error(error);

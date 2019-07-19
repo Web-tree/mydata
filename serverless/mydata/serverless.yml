@@ -16,7 +16,7 @@ custom:
       - dev
 
   authorizer:
-    arn: arn:aws:lambda:eu-central-1:830971531223:function:authorizer-dev-authorize
+    arn: arn:aws:lambda:eu-central-1:830971531223:function:authorizer-${opt:stage, self:provider.stage}-authorize
     cache:
       ttl: 0
 

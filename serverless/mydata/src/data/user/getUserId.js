@@ -1,1 +1,1 @@
-module.exports = (event) => event.requestContext.authorizer.username;
+module.exports = (event) => event.requestContext.authorizer.id;

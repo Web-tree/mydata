@@ -5,6 +5,7 @@ before_script:
   - npm i -g jest
 script:
   - cd serverless/mydata
+  - npm i
   - npm test
 notifications:
   slack:

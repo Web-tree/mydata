@@ -2,7 +2,7 @@
 
 const dynamodb = require('../dynamodb');
 const getUserId = require('./user/getUserId');
-const response = require('../response');
+const response = require('../aws/handlerResponse');
 
 module.exports.handler = (event, context, callback) => {
     const params = {

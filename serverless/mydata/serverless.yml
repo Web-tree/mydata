@@ -1,9 +1,11 @@
+org: webtree
+app: mydata
 service: mydata
 
 plugins:
+  - serverless-webpack
   - serverless-dynamodb-local
   - serverless-offline
-
 custom:
   dynamodb:
     start:
@@ -14,11 +16,21 @@ custom:
       dir: offline/migrations
     stages:
       - dev
+      - prod
 
   authorizer:
     arn: arn:aws:lambda:eu-central-1:830971531223:function:authorizer-${opt:stage, self:provider.stage}-authorize
     cache:
       ttl: 0
+
+  webpack:
+    webpackConfig: 'webpack.config.js'   # Name of webpack configuration file
+    includeModules: false   # Node modules configuration for packaging
+    packager: 'npm'   # Packager that will be used to package your external modules
+    excludeFiles: src/**/*.test.js # Provide a glob for files to ignore
+
+  serverless-offline:
+    port: 4000
 
 provider:
   name: aws
@@ -44,7 +56,7 @@ provider:
 
 functions:
   create:
-    handler: src/data/create.handler
+    handler: src/data/handlers/create.handler
     events:
       - http:
           path: data
@@ -53,8 +65,9 @@ functions:
           authorizer:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+
   list:
-    handler: src/data/list.handler
+    handler: src/data/handlers/list.handler
     events:
       - http:
           path: data
@@ -65,7 +78,7 @@ functions:
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
 
   get:
-    handler: src/data/get.handler
+    handler: src/data/handlers/get.handler
     events:
       - http:
           path: data/{name}
@@ -76,7 +89,7 @@ functions:
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
 
   update:
-    handler: src/data/update.handler
+    handler: src/data/handlers/update.handler
     events:
       - http:
           path: data/{name}
@@ -85,17 +98,17 @@ functions:
           authorizer:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
-
-  delete:
-    handler: src/data/delete.handler
-    events:
-      - http:
-          path: data/{name}
-          method: delete
-          cors: true
-          authorizer:
-            arn: ${self:custom.authorizer.arn}
-            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+#
+#  delete:
+#    handler: src/data/delete.handler
+#    events:
+#      - http:
+#          path: data/{name}
+#          method: delete
+#          cors: true
+#          authorizer:
+#            arn: ${self:custom.authorizer.arn}
+#            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
 
 resources:
   Resources:
@@ -104,21 +117,20 @@ resources:
       DeletionPolicy: Retain
       Properties:
         AttributeDefinitions:
-          -
-            AttributeName: userId
+          - AttributeName: userId
             AttributeType: S
-          -
-            AttributeName: name
+          - AttributeName: name
             AttributeType: S
         KeySchema:
-          -
-            AttributeName: userId
+          - AttributeName: userId
             KeyType: HASH
-          -
-            AttributeName: name
+          - AttributeName: name
             KeyType: RANGE
 
         ProvisionedThroughput:
           ReadCapacityUnits: 1
           WriteCapacityUnits: 1
         TableName: ${self:provider.environment.DYNAMODB_TABLE}
+
+package:
+  individually: true

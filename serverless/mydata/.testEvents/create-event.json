@@ -1,0 +1,8 @@
+{
+  "body": "{\"name\": \"some-name\", \"value\": \"aValue\"}",
+  "requestContext": {
+    "authorizer": {
+      "id": "7ebfb148-aedd-11e9-a2a3-2a2ae2dbcce4"
+    }
+  }
+}

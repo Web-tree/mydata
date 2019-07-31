@@ -22,7 +22,7 @@ export class EventParser {
     }
 
     static fetchPathParam(event: { pathParameters }, param: string): string {
-        const parameter = event.pathParameters[param];
+        const parameter = _.get(event, `pathParameters.${param}`, undefined);
         if (parameter) {
             return parameter;
         } else {

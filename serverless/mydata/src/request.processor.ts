@@ -6,10 +6,18 @@ export class RequestProcessor {
     static process(request: () => Promise<any>, callback: Callback) {
         try {
             request()
-                .then(response => callback(null, new HandlerResponse().withBody(response)))
+                .then(response => this.processSuccess(response, callback))
                 .catch(reason => this.processError(reason, callback));
         } catch (e) {
             this.processError(e, callback);
+        }
+    }
+
+    private static processSuccess(response, callback: Callback) {
+        if (response instanceof HandlerResponse) {
+            callback(null, response)
+        } else {
+            callback(null, new HandlerResponse().withBody(response));
         }
     }
 

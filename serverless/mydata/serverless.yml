@@ -98,17 +98,17 @@ functions:
           authorizer:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
-#
-#  delete:
-#    handler: src/data/delete.handler
-#    events:
-#      - http:
-#          path: data/{name}
-#          method: delete
-#          cors: true
-#          authorizer:
-#            arn: ${self:custom.authorizer.arn}
-#            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+
+  delete:
+    handler: src/data/handlers/delete.handler
+    events:
+      - http:
+          path: data/{name}
+          method: delete
+          cors: true
+          authorizer:
+            arn: ${self:custom.authorizer.arn}
+            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
 
 resources:
   Resources:

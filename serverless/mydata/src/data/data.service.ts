@@ -91,4 +91,19 @@ export class DataService {
                 .catch(reason => reject(reason))
         )
     }
+
+    delete(userId: UUID, name: string): Promise<void> {
+        const params: DocumentClient.DeleteItemInput = {
+            TableName: this.tableName,
+            Key: {
+                userId: userId,
+                name: name
+            }
+        };
+        return new Promise<void>((resolve, reject) =>
+            this.dynamoDb.delete(params).promise()
+                .then(() => resolve())
+                .catch(e => reject(e))
+        );
+    }
 }

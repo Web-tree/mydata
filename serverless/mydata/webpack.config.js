@@ -24,7 +24,10 @@ module.exports = {
                 test: /\.ts(x?)$/,
                 use: [
                     {
-                        loader: 'ts-loader'
+                        loader: 'ts-loader',
+                        options: {
+                            transpileOnly: true
+                        }
                     }
                 ],
             }
@@ -32,5 +35,7 @@ module.exports = {
     },
     externals: [{
         'aws-sdk': 'aws-sdk',
+        'typescript': 'typescript',
+        '@shelf/jest-dynamodb': '@shelf/jest-dynamodb'
     }]
 };

@@ -1,10 +1,23 @@
-import {IsNotEmpty, IsUUID, Matches, MaxLength} from 'class-validator';
+import {IsEmpty, IsIn, IsNotEmpty, IsNotIn, IsUUID, Matches, MaxLength} from 'class-validator';
 import {Ownable} from '../Ownable';
 import {UUID} from 'aws-sdk/clients/inspector';
 
 export class Data implements Ownable {
-    @IsUUID()
+    @IsUUID('4', {groups: ['create', 'get', 'update']})
     userId?: UUID;
+    @IsIn([
+        'email',
+        'names',
+        'documents',
+        'address',
+        'other'
+    ], {
+        groups: ['create']
+    })
+    @IsNotIn(['', 'other'], {
+        groups: ['update']
+    })
+    type?: string;
     @IsNotEmpty({
         groups: ['create', 'get', 'update']
     })

@@ -38,12 +38,14 @@ export class DataService {
             },
             ExpressionAttributeNames: {
                 '#data_value': 'value',
+                '#data_type': 'type',
             },
             ExpressionAttributeValues: {
+                ':type': data.type,
                 ':value': data.value,
                 ':updatedAt': timestamp,
             },
-            UpdateExpression: 'SET #data_value = :value, updatedAt = :updatedAt',
+            UpdateExpression: 'SET #data_value = :value, #data_type = :type, updatedAt = :updatedAt',
             ReturnValues: 'ALL_NEW',
         };
 

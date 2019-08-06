@@ -8,7 +8,7 @@ let dataService: DataService;
 let data: Data;
 
 beforeEach(() => {
-    data = {name: 'aName', value: 'aValue', updatedAt: 0, createdAt: 0, userId: 'aUserId'};
+    data = {name: 'a-name', type: 'custom', value: 'aValue', updatedAt: 0, createdAt: 0, userId: 'aUserId'};
 
     dataService = new DataService(tableName, dynamodb);
 });
@@ -23,11 +23,12 @@ describe('Data service', () => {
         it('should add data in dynamo', async () => {
             const timestamp = new Date().getTime();
             await dataService.create(data);
-            let {Item} = await dynamodb.get({TableName: tableName, Key: {userId: data.userId, name: data.name}}).promise();
+            const {Item} = await dynamodb.get({TableName: tableName, Key: {userId: data.userId, name: data.name}}).promise();
 
             expect(Item.name).toEqual(data.name);
             expect(Item.userId).toEqual(data.userId);
             expect(Item.value).toEqual(data.value);
+            expect(Item.type).toEqual(data.type);
             expect(Item.createdAt).not.toBeLessThan(timestamp);
             expect(Item.updatedAt).not.toBeLessThan(timestamp);
             expect(Item.updatedAt).toEqual(Item.createdAt);
@@ -38,9 +39,11 @@ describe('Data service', () => {
             const timestamp = new Date().getTime();
             await dynamodb.put({TableName: tableName, Item: data}).promise();
             data.value = 'other value';
+            data.type = 'email';
             await dataService.update(data);
 
             const {Item} = await dynamodb.get({TableName: 'data', Key: {userId: data.userId, name: data.name}}).promise();
+            expect(Item.type).toEqual(data.type);
             expect(Item.name).toEqual(data.name);
             expect(Item.userId).toEqual(data.userId);
             expect(Item.value).toEqual(data.value);

@@ -26,13 +26,14 @@ describe('Event parser', () => {
                     userId: uuid(),
                     name: 'name',
                     value: 'aValue',
+                    type: 'other',
                     createdAt: Date.now(),
                     updatedAt: Date.now()
                 };
             });
 
             it('should be parsed from event body', () => {
-                const parsed: Data = EventParser.parseAs(Data, eventOf(data));
+                const parsed: Data = EventParser.parseAs(Data, eventOf(data), {validator: {groups: ['create']}});
                 expect(parsed).toEqual(data);
             });
 
@@ -41,7 +42,7 @@ describe('Event parser', () => {
                 const validateExceptionFor = (event, fieldName, constrants) => {
                     expect.hasAssertions();
                     try {
-                        EventParser.parseAs(Data, eventOf(event))
+                        EventParser.parseAs(Data, eventOf(event), {validator: {groups: ['create']}})
                     } catch (e) {
                         expect(e.length).toEqual(1);
                         expect(e[0].constraints).toEqual(constrants);
@@ -60,19 +61,19 @@ describe('Event parser', () => {
                     it('should not be empty', () => {
                         data.name = '';
 
-                        validateExceptionFor(data, 'name', {'isNotEmpty': 'name should not be empty'});
+                        validateExceptionFor(data, 'name', {isNotEmpty: 'name should not be empty'});
                     });
                     it('should not be longer than 50 symbols', () => {
                         data.name = 'a'.repeat(51);
 
-                        validateExceptionFor(data, 'name', {'maxLength': 'name must be shorter than or equal to 50 characters'});
+                        validateExceptionFor(data, 'name', {maxLength: 'name must be shorter than or equal to 50 characters'});
                     });
                     describe('contains', () => {
                         const deniedChars = ' !@#$%&*()_+}{|":?><,.=`~';
                         for (let char of deniedChars) {
                             it(`should not contain char ${char}`, () => {
                                 data.name = char;
-                                validateExceptionFor(data, 'name', {'matches': 'Name can contain only letters, numbers and dash.'});
+                                validateExceptionFor(data, 'name', {matches: 'Name can contain only letters, numbers and dash.'});
                             });
                         }
                     });

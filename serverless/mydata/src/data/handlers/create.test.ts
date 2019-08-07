@@ -1,18 +1,20 @@
 import {handler} from './create'
 import {Data} from '../data.model';
 import {HandlerResponse} from '../../aws/handlerResponse';
+import uuid = require('uuid');
 
 describe('Create handler test', () => {
     it('should return 400 response when name contains incorrect symbols', done => {
         const data: Data = {
             name: 'incorrect name',
-            value: 'aValue'
+            value: 'aValue',
+            type: 'other'
         };
         const event = {
             body: JSON.stringify(data),
             requestContext: {
                 authorizer: {
-                    id: "7ebfb148-aedd-11e9-a2a3-2a2ae2dbcce4"
+                    id: uuid()
                 }
             }
         };

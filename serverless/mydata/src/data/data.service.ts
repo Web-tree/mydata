@@ -1,6 +1,7 @@
 import {DocumentClient} from 'aws-sdk/clients/dynamodb';
 import {Data} from './data.model';
 import {UUID} from 'aws-sdk/clients/inspector';
+import {HandlerResponse} from '../aws/handlerResponse';
 
 export class DataService {
 
@@ -69,7 +70,13 @@ export class DataService {
             this.dynamoDb
                 .get(params)
                 .promise()
-                .then(result => resolve(result.Item))
+                .then(result => {
+                    if (result.Item) {
+                        resolve(result.Item)
+                    } else {
+                        throw new HandlerResponse().notFound().withError(`Data with name ${name} not exists`)
+                    }
+                })
                 .catch(error => reject(error))
         );
     }

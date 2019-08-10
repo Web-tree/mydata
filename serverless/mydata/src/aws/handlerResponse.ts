@@ -24,6 +24,11 @@ export class HandlerResponse {
         return this;
     }
 
+    notFound() {
+        this.statusCode = 404;
+        return this;
+    }
+
     validationErrors(errors: ValidationError[]) {
         this.statusCode = 400;
         this.withBody(errors);
@@ -45,8 +50,9 @@ export class HandlerResponse {
         return this;
     }
 
-    private withError(message: string) {
+    withError(message: string) {
         this.withBody({error: message});
+        return this;
     }
 }
 

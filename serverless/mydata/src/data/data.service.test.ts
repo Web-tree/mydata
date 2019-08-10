@@ -2,6 +2,7 @@ import {DataService} from './data.service';
 import {Data} from './data.model';
 import uuid = require('uuid');
 import {dynamodb} from '../test/dynamoMock'
+import {HandlerResponse} from '../aws/handlerResponse';
 
 const tableName = 'data';
 let dataService: DataService;
@@ -57,6 +58,18 @@ describe('Data service', () => {
 
             expect(await dataService.get(data.userId, data.name)).toEqual(data)
         });
+
+        it('should return 404 if data not exists in dynamo', async () => {
+            expect.hasAssertions();
+            try {
+                await dataService.get(data.userId, 'missed-data-name')
+            } catch (e) {
+                expect(e).toBeInstanceOf(HandlerResponse);
+                expect(e.statusCode).toEqual(404);
+                expect(JSON.parse(e.body).error).toEqual('Data with name missed-data-name not exists')
+            }
+        });
+
     });
 
     describe('list method', () => {

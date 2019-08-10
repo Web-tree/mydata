@@ -11,9 +11,9 @@ describe('Create handler test', () => {
     it('should return 204 after delete', async done => {
         const data = {
             userId: uuid(),
-            name: 'some-name'
+            name: 'some-name',
+            type: 'other'
         };
-        await dataService.create(data);
 
         const event = {
             pathParameters: {
@@ -26,8 +26,14 @@ describe('Create handler test', () => {
             }
         };
         const callback = async (e, response: HandlerResponse) => {
+            expect.assertions(3);
             expect(response.statusCode).toEqual(204);
-            expect(await dataService.get(data.userId, data.name)).toBeFalsy();
+            try {
+                await dataService.get(data.userId, data.name);
+            } catch (e) {
+                expect(e).toBeInstanceOf(HandlerResponse);
+                expect(e.statusCode).toEqual(404);
+            }
             done();
         };
         handler(event, undefined, callback);

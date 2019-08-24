@@ -1,6 +1,7 @@
-import {IsEmpty, IsIn, IsNotEmpty, IsNotIn, IsUUID, Matches, MaxLength} from 'class-validator';
+import {IsIn, IsNotEmpty, IsNotIn, IsUUID, Matches, MaxLength} from 'class-validator';
 import {Ownable} from '../Ownable';
 import {UUID} from 'aws-sdk/clients/inspector';
+import {Usage} from './usage.model';
 
 export class Data implements Ownable {
     @IsUUID('4', {groups: ['create', 'get', 'update']})
@@ -35,4 +36,5 @@ export class Data implements Ownable {
     value?: string;
     createdAt?: number;
     updatedAt?: number;
+    usage?: Usage;
 }

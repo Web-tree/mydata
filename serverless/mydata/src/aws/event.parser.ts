@@ -3,6 +3,7 @@ import {ClassType} from 'class-transformer/ClassTransformer';
 import {Ownable} from '../ownable';
 import * as _ from 'lodash';
 import {HandlerResponse} from './handlerResponse';
+import {Event} from './event';
 
 export class EventParser {
 
@@ -21,14 +22,26 @@ export class EventParser {
         }
     }
 
-    static fetchPathParam(event: { pathParameters }, param: string): string {
+    static fetchPathParam(event: Event, param: string): string {
         const parameter = _.get(event, `pathParameters.${param}`, undefined);
         if (parameter) {
             return parameter;
         } else {
             const message = `Missed path param: ${param}`;
-            console.error(message);
             throw new HandlerResponse().badRequest(message);
         }
+    }
+
+    static fetchBodyParams(event: Event, params: string[]): any {
+        const parsedBody = <object>JSON.parse(event.body);
+        const result = {};
+        params.forEach(value => {
+            if (parsedBody[value]) {
+                result[value] = parsedBody[value];
+            } else {
+                throw new HandlerResponse().badRequest(`Parameter ${value} is required.`);
+            }
+        });
+        return result;
     }
 }

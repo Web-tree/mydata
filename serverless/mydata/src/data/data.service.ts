@@ -10,7 +10,7 @@ export class DataService {
         private dynamoDb: DocumentClient) {
     }
 
-    async create(data: Data): Promise<Data> {
+    create(data: Data): Promise<Data> {
         const timestamp = new Date().getTime();
         data.createdAt = timestamp;
         data.updatedAt = timestamp;
@@ -29,7 +29,7 @@ export class DataService {
         });
     }
 
-    async update(data: Data): Promise<Data> {
+    update(data: Data): Promise<Data> {
         const timestamp = new Date().getTime();
         const params = {
             TableName: this.tableName,
@@ -58,7 +58,7 @@ export class DataService {
         );
     }
 
-    async get(userId: string, name: string): Promise<Data> {
+    get(userId: string, name: string): Promise<Data> {
         const params: DocumentClient.GetItemInput = {
             TableName: this.tableName,
             Key: {

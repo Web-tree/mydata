@@ -10,7 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@types/node": "^12.6.8",
     "class-transformer": "^0.2.3",
     "class-transformer-validator": "^0.7.1",
     "class-validator": "^0.9.1",
@@ -21,6 +20,7 @@
     "@types/aws-lambda": "^8.10.31",
     "@types/aws-sdk": "^2.7.0",
     "@types/jest": "^24.0.15",
+    "@types/node": "^12.7.1",
     "@types/uuid": "^3.4.5",
     "aws-sdk": "^2.496.0",
     "jest": "^24.8.0",

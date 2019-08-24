@@ -1,7 +1,7 @@
 import {DataService} from './data.service';
 import {Data} from './data.model';
 import uuid = require('uuid');
-import {dynamodb} from '../test/dynamoMock'
+import {dynamodb} from '../test/dynamoProvider'
 import {HandlerResponse} from '../aws/handlerResponse';
 
 const tableName = 'data';

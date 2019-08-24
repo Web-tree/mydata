@@ -1,7 +1,7 @@
 import {handler} from './delete';
 import {HandlerResponse} from '../../aws/handlerResponse';
 import {DataService} from '../data.service';
-import {dynamodb} from '../../test/dynamoMock';
+import {dynamodb} from '../../test/dynamoProvider';
 import uuid = require('uuid');
 
 describe('Create handler test', () => {

@@ -3,6 +3,7 @@ import {Data} from '../data/data.model';
 import {v4 as uuid} from 'uuid';
 import {Ownable} from '../ownable';
 import {HandlerResponse} from './handlerResponse';
+import {Event} from './event';
 
 describe('Event parser', () => {
     describe('when parse body', () => {
@@ -95,7 +96,7 @@ describe('Event parser', () => {
             expect(EventParser.fetchPathParam(event, 'param')).toEqual('value')
         });
         it('should throw error response when no parameter', () => {
-            const event = {pathParameters: {param: 'value'}};
+            const event: Event = {pathParameters: {param: 'value'}};
             expect.hasAssertions();
             try {
                 EventParser.fetchPathParam(event, 'missedParam')

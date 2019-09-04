@@ -28,10 +28,9 @@ describe('Usage service', () => {
         const dataProcessor = 'https://google.com';
         await usageService.add(data.userId, data.name, type, dataProcessor);
 
-        expect.assertions(2);
-        return dataService.get(data.userId, data.name).then(value => {
-            expect(value.usage).toBeTruthy();
-            expect(value.usage.url).toContain(dataProcessor);
+        expect.assertions(1);
+        return dataService.get(data.userId, data.name).then(async value => {
+            expect(value.usage.url).toMatchObject([dataProcessor]);
         });
     });
 

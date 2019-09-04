@@ -11,9 +11,12 @@ export class UsageService {
     add(userId: string, dataName: string, type: string, dataProcessor: string): Promise<Data> {
         return this.updateUsage(userId, dataName, type, dataProcessor)
             .catch(async reason => {
+                console.log(reason);
                 if (reason.code === 'ValidationException' && reason.message === this.pathNotExistsMessage) {
                     await this.initUsageColumn(userId, dataName);
                     return this.updateUsage(userId, dataName, type, dataProcessor);
+                } else {
+                    throw reason;
                 }
             });
     }
@@ -30,10 +33,12 @@ export class UsageService {
                 '#u': 'usage'
             },
             ExpressionAttributeValues: {
-                ':data_processor': [dataProcessor],
-                ':empty_list': []
+                ':data_processor': this.dynamodb.createSet([dataProcessor]),
+                // ':new_set': this.dynamodb.createSet([dataProcessor])
             },
-            UpdateExpression: 'SET #u.#type = list_append(if_not_exists(#u.#type, :empty_list), :data_processor)'
+            // UpdateExpression: 'SET #u.#type = list_append(if_not_exists(#u.#type, :empty_list), :data_processor)'
+            // UpdateExpression: 'SET #u.#type = if_not_exists(#u.#type, :new_set) AND ADD #u.#type = :data_processor'
+            UpdateExpression: 'ADD #u.#type :data_processor'
         };
         return new Promise<any>((resolve, reject) =>
             this.dynamodb
@@ -45,6 +50,7 @@ export class UsageService {
     }
 
     private initUsageColumn(userId: string, dataName: string) {
+        const usage = new Usage();
         const params: DocumentClient.UpdateItemInput = {
             TableName: this.tableName,
             Key: {
@@ -55,7 +61,7 @@ export class UsageService {
                 '#u': 'usage'
             },
             ExpressionAttributeValues: {
-                ':empty_usage': new Usage()
+                ':empty_usage': usage
             },
             UpdateExpression: 'SET #u = :empty_usage'
         };

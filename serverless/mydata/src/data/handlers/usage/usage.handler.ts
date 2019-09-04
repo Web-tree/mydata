@@ -11,7 +11,8 @@ export class UsageHandler extends AwsHandler {
 
     protected handleRequest(event: Event, context: Context) {
         const userId = EventParser.getUserId(event);
-        const dataName = EventParser.fetchPathParam(event, 'dataName');
+        console.log(event);
+        const dataName = EventParser.fetchPathParam(event, 'name');
         const {usageType, usageValue} = EventParser.fetchBodyParams(event, ['usageType', 'usageValue']);
         return this.usageService.add(userId, dataName, usageType, usageValue);
     }

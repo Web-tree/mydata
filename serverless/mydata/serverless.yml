@@ -121,6 +121,17 @@ functions:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
 
+  usageList:
+    handler: src/data/handlers/usage/list.handler
+    events:
+      - http:
+          path: data/{name}/usage
+          method: get
+          cors: true
+          authorizer:
+            arn: ${self:custom.authorizer.arn}
+            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+
 resources:
   Resources:
     MydataTable:

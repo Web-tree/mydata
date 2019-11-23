@@ -1,3 +1,7 @@
+export class UsageList {
+    url: Map<string, Usage>;
+}
 export class Usage {
-    url: string[];
+    createdAt?: number;
+    updatedAt?: number;
 }

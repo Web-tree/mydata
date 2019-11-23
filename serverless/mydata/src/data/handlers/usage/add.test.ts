@@ -1,11 +1,13 @@
 import {handler} from './add'
 import {Data} from '../../data.model';
 import {DataService} from '../../data.service';
-import {dynamodb} from '../../../test/dynamoProvider';
+import {dataTable, dynamodb} from '../../../test/dynamoProvider';
 import {Event} from '../../../aws/event';
+import {UsageService} from '../../usage.service';
 
-describe('Add handler', () => {
+xdescribe('Add handler', () => {
     let dataService: DataService;
+    let usageService: UsageService;
     let data: Data;
     beforeEach(async () => {
         data = {
@@ -14,22 +16,22 @@ describe('Add handler', () => {
             type: 'other',
             userId: '123'
         };
-        dataService = new DataService('data', dynamodb);
+        dataService = new DataService(dataTable, dynamodb);
+        usageService = new UsageService(dataTable, dynamodb);
         await dataService.create(data);
     });
     afterEach(async () => {
         await dataService.delete(data.userId, data.name);
     });
 
-    it('should return 400 response when name contains incorrect symbols', done => {
+    it('should call usage handler', done => {
         const event: Event = {
             body: JSON.stringify({
-                userId: data.userId,
                 usageType: 'url',
                 usageValue: 'https://google.com'
             }),
             pathParameters: {
-                dataName: data.name
+                name: data.name
             },
             requestContext: {
                 authorizer: {
@@ -40,9 +42,7 @@ describe('Add handler', () => {
 
         const callback = async (e, response) => {
             expect(response.statusCode).toEqual(200);
-            const updatedData = await dataService.get(data.userId, data.name);
-            expect(updatedData.usage).toBeTruthy();
-            expect(updatedData.usage.url).toContainEqual('https://google.com');
+            expect(await usageService.getAll(data.userId, data.name)).toEqual({url: ['https://google.com']});
             done();
         };
 

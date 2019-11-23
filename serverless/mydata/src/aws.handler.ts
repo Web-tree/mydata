@@ -7,5 +7,5 @@ export abstract class AwsHandler {
         RequestProcessor.process(() => this.handleRequest(event, context), callback);
     }
 
-    protected abstract handleRequest(event: Event, context: Context);
+    protected abstract handleRequest(event: Event, context: Context): Promise<any>;
 }

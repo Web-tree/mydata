@@ -13,25 +13,25 @@
     "class-transformer": "^0.2.3",
     "class-transformer-validator": "^0.7.1",
     "class-validator": "^0.9.1",
-    "uuid": "^3.3.2"
+    "uuid": "^3.3.3"
   },
   "devDependencies": {
-    "@shelf/jest-dynamodb": "^1.4.0",
-    "@types/aws-lambda": "^8.10.31",
+    "@shelf/jest-dynamodb": "^1.4.1",
+    "@types/aws-lambda": "^8.10.34",
     "@types/aws-sdk": "^2.7.0",
-    "@types/jest": "^24.0.15",
-    "@types/node": "^12.7.1",
-    "@types/uuid": "^3.4.5",
-    "aws-sdk": "^2.496.0",
-    "jest": "^24.8.0",
-    "serverless-dynamodb-local": "^1.0.2",
-    "serverless-offline": "^5.4.4",
+    "@types/jest": "^24.0.21",
+    "@types/node": "^12.12.5",
+    "@types/uuid": "^3.4.6",
+    "aws-sdk": "^2.562.0",
+    "jest": "^24.9.0",
+    "serverless-dynamodb-local": "^0.2.38",
+    "serverless-offline": "^5.12.0",
     "serverless-plugin-optimize": "^4.1.0-rc.1",
     "serverless-plugin-typescript": "^1.1.9",
     "serverless-webpack": "^5.3.1",
-    "ts-jest": "^24.0.2",
-    "ts-loader": "^6.0.4",
-    "typescript": "^3.5.3",
-    "webpack": "^4.36.1"
+    "ts-jest": "^24.1.0",
+    "ts-loader": "^6.2.1",
+    "typescript": "^3.6.4",
+    "webpack": "^4.41.2"
   }
 }

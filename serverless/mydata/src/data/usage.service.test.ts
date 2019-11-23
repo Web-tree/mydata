@@ -41,9 +41,8 @@ describe('Usage service', () => {
                 name: data.name
             }
         }).promise().then(value => {
-            console.log(value)
             expect(value.Item.usage.url).toBeTruthy();
-            expect(value.Item.usage.url.dataProcessor).toBeTruthy();
+            expect(value.Item.usage.url[dataProcessor]).toBeTruthy();
             done();
         });
     });
@@ -70,7 +69,7 @@ describe('Usage service', () => {
         }).promise().then(value => {
             expect(value.Item.usage).toBeTruthy();
             console.log(value.Item.usage.url[dataProcessor]);
-            expect(value.Item.usage.url.dataProcessor).toBeTruthy();
+            expect(value.Item.usage.url[dataProcessor]).toBeTruthy();
         });
     });
 
@@ -78,7 +77,12 @@ describe('Usage service', () => {
         const data = {
             userId: uuid(),
             name: 'a-name',
-            usage: { url: dynamodb.createSet(['https://a.com']) }
+            usage: { url: {
+                    'https://a.com': {
+                        'updated': new Date().getTime()
+                    }
+                }
+            }
         };
         await dynamodb.put({
             TableName: 'data',
@@ -86,7 +90,8 @@ describe('Usage service', () => {
         }).promise();
 
         return usageService.getAll(data.userId, data.name).then(usage => {
-            expect(usage.url).toEqual(['https://a.com']);
+            console.log(usage)
+            expect(usage.url['https://a.com']).toBeTruthy();
             done();
         });
     });

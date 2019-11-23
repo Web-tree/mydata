@@ -68,16 +68,11 @@ export class UsageService {
             ProjectionExpression: '#u'
         };
 
-        function unwrapSets(usage: DocumentClient.AttributeValue) {
-            usage.url = usage.url.values;
-            return usage;
-        }
-
         return new Promise<any>((resolve, reject) =>
             this.dynamodb.get(params).promise()
                 .then(value => {
                     if (value.Item) {
-                        resolve(value.Item.usage ? unwrapSets(value.Item.usage) : {});
+                        resolve(value.Item.usage ? value.Item.usage : {});
                     } else {
                         throw new HandlerResponse().notFound().withError(`Data "${dataName}" is not found.`);
                     }
@@ -87,50 +82,46 @@ export class UsageService {
     }
 
     private async initUsageColumn(userId: string, dataName: string, type: string): Promise<any> {
-        const data = await this.dataService.get(userId, dataName);
-        if (!data.usage) {
-            const paramsUsage: DocumentClient.UpdateItemInput = {
-                TableName: this.tableName,
-                Key: {
-                    userId: userId,
-                    name: dataName
-                },
-                ExpressionAttributeNames: {
-                    '#u': 'usage'
-                },
-                ExpressionAttributeValues: {
-                    ':empty_usage':  new UsageList()
-                },
-                UpdateExpression: 'SET #u = :empty_usage',
-                ConditionExpression: 'attribute_not_exists(#u)'
-            };
-            await this.dynamodb.update(paramsUsage).promise();
-        }
-        if (!data.usage[type]) {
-            const paramsDataProcessor: DocumentClient.UpdateItemInput = {
-                TableName: this.tableName,
-                Key: {
-                    userId: userId,
-                    name: dataName
-                },
-                ExpressionAttributeNames: {
-                    '#u': 'usage',
-                    '#type': type
-                },
-                ExpressionAttributeValues: {
-                    ':empty_usage': {'M': {}}
-                },
-                UpdateExpression: 'SET #u.#type = :empty_usage',
-                ConditionExpression: 'attribute_not_exists(#u.#type)'
-            };
-            await this.dynamodb.update(paramsDataProcessor).promise();
-        }
-        await this.dataService.update(data);
+        await this.createUsageIfNotExists(userId, dataName);
+        await this.createTypeIfNotExists(userId, dataName, type);
+    }
 
-        const usage = new Usage();
-        const usageList = new UsageList();
+    private async createTypeIfNotExists(userId: string, dataName: string, type: string) {
+        const paramsDataProcessor: DocumentClient.UpdateItemInput = {
+            TableName: this.tableName,
+            Key: {
+                userId: userId,
+                name: dataName
+            },
+            ExpressionAttributeNames: {
+                '#u': 'usage',
+                '#type': type
+            },
+            ExpressionAttributeValues: {
+                ':empty_usage': {}
+            },
+            UpdateExpression: 'SET #u.#type = :empty_usage',
+            ConditionExpression: 'attribute_not_exists(#u.#type)'
+        };
+        await this.dynamodb.update(paramsDataProcessor).promise();
+    }
 
-
-
+    private async createUsageIfNotExists(userId: string, dataName: string) {
+        const paramsUsage: DocumentClient.UpdateItemInput = {
+            TableName: this.tableName,
+            Key: {
+                userId: userId,
+                name: dataName
+            },
+            ExpressionAttributeNames: {
+                '#u': 'usage'
+            },
+            ExpressionAttributeValues: {
+                ':empty_usage': new UsageList()
+            },
+            UpdateExpression: 'SET #u = :empty_usage',
+            ConditionExpression: 'attribute_not_exists(#u)'
+        };
+        await this.dynamodb.update(paramsUsage).promise();
     }
 }

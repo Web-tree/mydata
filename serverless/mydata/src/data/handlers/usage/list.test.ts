@@ -10,7 +10,7 @@ describe('List handler', () => {
     const dataService = new DataService(dataTable, dynamodb);
     const usageService = new UsageService(dataTable, dynamodb);
 
-    xit('should return usage', async (done) => {
+    it('should return usage', async (done) => {
         const data = {name: 'a-data', userId: uuid()};
         await dataService.create(data);
         await usageService.add(data.userId, data.name, 'url', 'https://google.com');

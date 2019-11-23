@@ -5,7 +5,7 @@ import {dataTable, dynamodb} from '../../../test/dynamoProvider';
 import {Event} from '../../../aws/event';
 import {UsageService} from '../../usage.service';
 
-xdescribe('Add handler', () => {
+describe('Add handler', () => {
     let dataService: DataService;
     let usageService: UsageService;
     let data: Data;
@@ -42,7 +42,9 @@ xdescribe('Add handler', () => {
 
         const callback = async (e, response) => {
             expect(response.statusCode).toEqual(200);
-            expect(await usageService.getAll(data.userId, data.name)).toEqual({url: ['https://google.com']});
+            let allUsage = await usageService.getAll(data.userId, data.name);
+            expect(allUsage.url).toBeTruthy();
+            expect(allUsage.url['https://google.com']).toBeTruthy();
             done();
         };
 

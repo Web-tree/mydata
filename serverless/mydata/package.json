@@ -10,7 +10,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "class-transformer": "^0.2.3",
+    "class-transformer": "^0.3.1",
     "class-transformer-validator": "^0.7.1",
     "class-validator": "^0.9.1",
     "uuid": "^3.3.3"

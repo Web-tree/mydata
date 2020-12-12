@@ -9,7 +9,7 @@ export class DataService {
         private tableName: string,
         private dynamoDb: DocumentClient) {
     }
-
+ 
     create(data: Data): Promise<Data> {
         const timestamp = new Date().getTime();
         data.createdAt = timestamp;
@@ -49,7 +49,7 @@ export class DataService {
             UpdateExpression: 'SET #data_value = :value, #data_type = :type, updatedAt = :updatedAt',
             ReturnValues: 'ALL_NEW',
         };
-
+ 
         return new Promise<any>((resolve, reject) =>
             this.dynamoDb.update(params)
                 .promise()
@@ -100,6 +100,28 @@ export class DataService {
                 .catch(reason => reject(reason))
         )
     }
+
+    count(userId: UUID): Promise<any> {
+        const params: DocumentClient.QueryInput = {
+            TableName: this.tableName,
+            KeyConditionExpression: '#userId = :userId',
+            ExpressionAttributeNames: {
+                "#userId": "userId"
+            },
+            ExpressionAttributeValues: {
+                ":userId": userId
+            },
+            Select:'COUNT'
+        };
+        return new Promise<any>((resolve, reject) =>
+            this.dynamoDb
+                .query(params)
+                .promise()
+                .then(value => resolve(value.Count))
+                .catch(reason => reject(reason))
+        )
+    }
+
 
     delete(userId: UUID, name: string): Promise<void> {
         const params: DocumentClient.DeleteItemInput = {

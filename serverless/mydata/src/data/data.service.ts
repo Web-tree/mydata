@@ -16,9 +16,10 @@ export class DataService {
 
         const count = await this.count(data.userId);
        
-            if(count > this.dataLimit)
+            if(count > this.dataLimit){
                 throw new HandlerResponse().badRequest("Data limit is 100. You cannot have more than 100 items in the database!");
-            
+            }
+                
         const timestamp = new Date().getTime();
         data.createdAt = timestamp;
         data.updatedAt = timestamp;
@@ -129,7 +130,6 @@ export class DataService {
                 .catch(reason => reject(reason))
         )
     }
-
 
     delete(userId: UUID, name: string): Promise<void> {
         const params: DocumentClient.DeleteItemInput = {

@@ -5,7 +5,7 @@ import {HandlerResponse} from '../aws/handlerResponse';
 
 export class DataService {
 
-    dataLimit: number = 20;
+    dataLimit: number = 100;
 
     constructor(
         private tableName: string,

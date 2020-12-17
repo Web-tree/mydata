@@ -75,6 +75,17 @@ functions:
             arn: ${self:custom.authorizer.arn}
             resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
 
+  count:
+    handler: src/data/handlers/count.handler
+    events:
+      - http:
+          path: data/count
+          method: get
+          cors: true
+          authorizer:
+            arn: ${self:custom.authorizer.arn}
+            resultTtlInSeconds: ${self:custom.authorizer.cache.ttl}
+
   get:
     handler: src/data/handlers/get.handler
     events:

@@ -5,12 +5,21 @@ import {HandlerResponse} from '../aws/handlerResponse';
 
 export class DataService {
 
+    dataLimit: number = 100;
+
     constructor(
         private tableName: string,
         private dynamoDb: DocumentClient) {
     }
+ 
+    async create(data: Data): Promise<Data> {
 
-    create(data: Data): Promise<Data> {
+        const count = await this.count(data.userId);
+       
+            if(count > this.dataLimit){
+                throw new HandlerResponse().badRequest("Data limit is 100. You cannot have more than 100 items in the database!");
+            }
+                
         const timestamp = new Date().getTime();
         data.createdAt = timestamp;
         data.updatedAt = timestamp;
@@ -49,7 +58,7 @@ export class DataService {
             UpdateExpression: 'SET #data_value = :value, #data_type = :type, updatedAt = :updatedAt',
             ReturnValues: 'ALL_NEW',
         };
-
+ 
         return new Promise<any>((resolve, reject) =>
             this.dynamoDb.update(params)
                 .promise()
@@ -97,6 +106,27 @@ export class DataService {
                 .query(params)
                 .promise()
                 .then(value => resolve(value.Items))
+                .catch(reason => reject(reason))
+        )
+    }
+
+    count(userId: UUID): Promise<number> {
+        const params: DocumentClient.QueryInput = {
+            TableName: this.tableName,
+            KeyConditionExpression: '#userId = :userId',
+            ExpressionAttributeNames: {
+                "#userId": "userId"
+            },
+            ExpressionAttributeValues: {
+                ":userId": userId
+            },
+            Select:'COUNT'
+        };
+        return new Promise<number>((resolve, reject) =>
+            this.dynamoDb
+                .query(params)
+                .promise()
+                .then(value => resolve(value.Count))
                 .catch(reason => reject(reason))
         )
     }

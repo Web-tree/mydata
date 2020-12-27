@@ -15,7 +15,7 @@ export class Data implements Ownable {
     ], {
         groups: ['create']
     })
-    @IsNotIn(['', ''], {
+    @IsNotIn(['other'], {
         groups: ['update']
     })
     type?: string;
